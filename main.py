@@ -197,10 +197,10 @@ class Ui_MainWindow(object):
         # Overall graph
         self.graphOverall.update_figure(1, self.matOverall)
 
-        width = self.centralwidget.width() - 20
-        height = (self.centralwidget.height() - (self.graphCurrent.x() + 200)) / 2
-        self.graphCurrent.setGeometry(QtCore.QRect(10, 200, width, (int)(height)))
-        self.graphOverall.setGeometry(QtCore.QRect(10, 200 + self.graphCurrent.height() + 15, width, (int)(height)))
+        graphWidth = self.centralwidget.width() - 20
+        graphHeight = (self.centralwidget.height() - (self.graphCurrent.x() + 200)) / 2
+        self.graphCurrent.setGeometry(QtCore.QRect(10, 200, graphWidth, (int)(graphHeight)))
+        self.graphOverall.setGeometry(QtCore.QRect(10, 200 + self.graphCurrent.height() + 15, graphWidth, (int)(graphHeight)))
 
     def handlerBtnPlusOne(self):
         self.nbIter = 1
@@ -262,11 +262,29 @@ class DynamicMplCanvas(MplCanvas):
         else:
              self.axes.set_title('Overall temperature in Kelvin depending on the zone')
        
-        self.axes.plot(np.arange(arrayWidth), mat, 'or-')
-        self.axes.xaxis.set_ticks(np.arange(0, arrayWidth, 1))
-        start, end = self.axes.get_ylim()
+        if (arrayWidth < 150):
+            self.axes.plot(np.arange(arrayWidth), mat, 'or-')
+        else:
+            self.axes.plot(np.arange(arrayWidth), mat, 'r-')
 
-        self.axes.yaxis.set_ticks(np.arange(start, end, 10))
+        if arrayWidth < 11:
+            self.axes.xaxis.set_ticks(np.arange(0, arrayWidth, 1))
+        elif arrayWidth < 31:
+            self.axes.xaxis.set_ticks(np.arange(0, arrayWidth, 2))
+        elif arrayWidth < 61:
+            self.axes.xaxis.set_ticks(np.arange(0, arrayWidth, 4))
+        elif arrayWidth < 101:
+            self.axes.xaxis.set_ticks(np.arange(0, arrayWidth, 6))
+
+        start, end = self.axes.get_ylim()
+        step = (int)((end - start) / 10)
+
+        if step < 5:
+            self.axes.yaxis.set_ticks(np.arange(start, end, 5))
+        elif step < 10:
+            self.axes.yaxis.set_ticks(np.arange(start, end, 10))
+        elif step < 15:
+            self.axes.yaxis.set_ticks(np.arange(start, end, 15))
 
         self.draw()
 
