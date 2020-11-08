@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>570</width>
-    <height>806</height>
+    <width>560</width>
+    <height>597</height>
    </rect>
   </property>
   <property name="focusPolicy">
@@ -303,13 +303,23 @@
      <string>Current iteration</string>
     </property>
    </widget>
-   <widget class="DynamicMplCanvas" name="widget" native="true">
+   <widget class="DynamicMplCanvas" name="graphCurrent" native="true">
     <property name="geometry">
      <rect>
       <x>10</x>
       <y>200</y>
-      <width>221</width>
-      <height>161</height>
+      <width>541</width>
+      <height>171</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="DynamicMplCanvas" name="graphOverall" native="true">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>380</y>
+      <width>541</width>
+      <height>171</height>
      </rect>
     </property>
    </widget>
@@ -319,7 +329,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>570</width>
+     <width>560</width>
      <height>21</height>
     </rect>
    </property>

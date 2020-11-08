@@ -14,7 +14,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(570, 806)
+        MainWindow.resize(560, 597)
         MainWindow.setFocusPolicy(QtCore.Qt.NoFocus)
         MainWindow.setLayoutDirection(QtCore.Qt.LeftToRight)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
@@ -96,12 +96,15 @@ class Ui_MainWindow(object):
         self.grpCurrentIter = QtWidgets.QGroupBox(self.centralwidget)
         self.grpCurrentIter.setGeometry(QtCore.QRect(220, 80, 331, 111))
         self.grpCurrentIter.setObjectName("grpCurrentIter")
-        self.widget = DynamicMplCanvas(self.centralwidget)
-        self.widget.setGeometry(QtCore.QRect(10, 200, 221, 161))
-        self.widget.setObjectName("widget")
+        self.graphCurrent = DynamicMplCanvas(self.centralwidget)
+        self.graphCurrent.setGeometry(QtCore.QRect(10, 200, 541, 171))
+        self.graphCurrent.setObjectName("graphCurrent")
+        self.graphOverall = DynamicMplCanvas(self.centralwidget)
+        self.graphOverall.setGeometry(QtCore.QRect(10, 380, 541, 171))
+        self.graphOverall.setObjectName("graphOverall")
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(MainWindow)
-        self.menubar.setGeometry(QtCore.QRect(0, 0, 570, 21))
+        self.menubar.setGeometry(QtCore.QRect(0, 0, 560, 21))
         self.menubar.setObjectName("menubar")
         MainWindow.setMenuBar(self.menubar)
         self.statusbar = QtWidgets.QStatusBar(MainWindow)
@@ -126,7 +129,7 @@ class Ui_MainWindow(object):
         self.btnPlusTenIter.setText(_translate("MainWindow", "+ 10"))
         self.btnPlusHundredIter.setText(_translate("MainWindow", "+ 100"))
         self.grpCurrentIter.setTitle(_translate("MainWindow", "Current iteration"))
-from C:\Users\willi\Desktop\Workspace\python\SnowballEarthTheorem\main.py import DynamicMplCanvas
+
 
 
 if __name__ == "__main__":
