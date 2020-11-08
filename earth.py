@@ -2,10 +2,6 @@ import numpy as np
 import math
 
 class Earth:
-    TEMP_INDEX = 0
-    ENERGY_INDEX = 1
-    ALBEDO_INDEX = 2
-
     SIGMA = 5.670400*10**(-8)
     SOLAR = 1368
     RADIUS = 6_371_000 # meters
@@ -13,46 +9,42 @@ class Earth:
 
     def __init__(self, nbCell, albedoCloud, greenHouse, matTempIni):
         self.nbCell = nbCell # Number of cells in the simulation
-        self.albedoCloud = albedoCloud # Albedo cloud constant?
-        self.greenHouse = greenHouse # Green house constant?
-        self.matSize = int(math.sqrt(nbCell))
+        if(nbCell < 0):
+            raise Exception("Number of cells must be greater than 0")
 
+        self.albedoCloud = albedoCloud # Albedo cloud constant
+        if(albedoCloud < 0 || albedoCloud > 1):
+            raise Exception("Cloud albedo must be between 0 and 1")        
+
+        self.greenHouse = greenHouse # Green house constant
+        if(greenHouse < 0 || greenHouse > 1):
+            raise Exception("Green house must be between 0 and 1")   
+
+        self.matSize = int(math.sqrt(nbCell))
         if(matTempIni.size != nbCell):
             raise Exception("Initial temperature matrix does not fit with the number of cells")
         
-        # Creation of the cell matrix (3xNxN)
-        self.cells = np.zeros((3, self.matSize, self.matSize))
-
+        # Adding some randomness to our data
         matRandom = np.random.rand(self.matSize, self.matSize)
-        self.cells[self.TEMP_INDEX, :, :] = matRandom + matTempIni
-        print(self.cells[self.TEMP_INDEX, :, :])
+        self.matTemp = matRandom + matTempIni
 
 
     def iterate(self):
         self.calculateTempVariation()
-        print(self.cells[self.TEMP_INDEX, :, :])
+        print("=======================================Itération=======================================")
+        print(self.matTemp)
 
 
     def calculateTempVariation(self):
-        albedo = self.cells[self.ALBEDO_INDEX, :, :]
-        temp = self.cells[self.TEMP_INDEX, :, :]
         dTemp = np.zeros((self.matSize, self.matSize))
-
-        for i,j in np.ndindex(albedo.shape):
-            if temp[i,j] <= 263:
-                albedo[i,j] = 0.62
-            else:
-                albedo[i,j] = 0.3
+        for i,j in np.ndindex(self.matTemp.shape):
+            albedo = 0.62 if self.matTemp[i,j] <= 263 else 0.3
             
-            entree = self.SOLAR*(1 - albedo[i,j])
-            output = 4*(1-self.greenHouse)*self.SIGMA*(temp[i,j]**4)
-            dt = (entree - output) / (16*(1-self.greenHouse)*self.SIGMA*temp[i,j]**3)
+            teta = (math.pi/2 / self.matSize) + math.pi * i / self.matSize  
+            inpt = self.SOLAR*abs(math.sin(teta))*(1 - albedo)
+            output = 4*(1-self.greenHouse)*self.SIGMA*(self.matTemp[i,j]**4)
+            dt = (inpt - output) / (16*(1-self.greenHouse)*self.SIGMA*self.matTemp[i,j]**3)
 
             dTemp[i,j] = dt
 
-        self.cells[self.TEMP_INDEX, :, :] = temp + dTemp
-
-
-
-
-
+        self.matTemp += dTemp

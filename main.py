@@ -11,14 +11,14 @@ from earth import Earth
 
 
 class Ui_MainWindow(object):
-    DEFAULT_CELL_NUMBERS = 100
+    DEFAULT_CELL_NUMBERS = 121
     DEFAULT_ALBEDO_CLOUD = 0.2
     DEFAULT_GREEN_HOUSE = 0.2
     DEFAULT_INITIAL_TEMP = 273
 
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(570, 806)
+        MainWindow.resize(560, 597)
         MainWindow.setFocusPolicy(QtCore.Qt.NoFocus)
         MainWindow.setLayoutDirection(QtCore.Qt.LeftToRight)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
@@ -100,9 +100,15 @@ class Ui_MainWindow(object):
         self.grpCurrentIter = QtWidgets.QGroupBox(self.centralwidget)
         self.grpCurrentIter.setGeometry(QtCore.QRect(220, 80, 331, 111))
         self.grpCurrentIter.setObjectName("grpCurrentIter")
+        self.graphCurrent = DynamicMplCanvas(self.centralwidget)
+        self.graphCurrent.setGeometry(QtCore.QRect(10, 200, 541, 171))
+        self.graphCurrent.setObjectName("graphCurrent")
+        self.graphOverall = DynamicMplCanvas(self.centralwidget)
+        self.graphOverall.setGeometry(QtCore.QRect(10, 380, 541, 171))
+        self.graphOverall.setObjectName("graphOverall")
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(MainWindow)
-        self.menubar.setGeometry(QtCore.QRect(0, 0, 570, 21))
+        self.menubar.setGeometry(QtCore.QRect(0, 0, 560, 21))
         self.menubar.setObjectName("menubar")
         MainWindow.setMenuBar(self.menubar)
         self.statusbar = QtWidgets.QStatusBar(MainWindow)
@@ -125,15 +131,6 @@ class Ui_MainWindow(object):
         self.btnPlusFiveIter.clicked.connect(self.handlerBtnPlusFive)
         self.btnPlusTenIter.clicked.connect(self.handlerBtnPlusTen)
         self.btnPlusHundredIter.clicked.connect(self.handlerBtnPlusHundred)
-
-        # Graphs
-        self.currentGraph = DynamicMplCanvas(self.centralwidget)
-        self.currentGraph.setGeometry(QtCore.QRect(10, 200, 200, 200))
-        self.currentGraph.setObjectName("currentGraph")
-
-        self.overallGraph = DynamicMplCanvas(self.centralwidget)
-        self.overallGraph.setGeometry(QtCore.QRect(10, 400, 200, 200))
-        self.overallGraph.setObjectName("overallGraph")
 
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
@@ -175,8 +172,8 @@ class Ui_MainWindow(object):
         while self.nbIter > 0:
             self.earth.iterate()
             self.nbIter -= 1
-        self.overallGraph.update_figure()
-        self.currentGraph.update_figure()
+        self.graphCurrent.update_figure()
+        self.graphOverall.update_figure()
 
     def handlerBtnPlusOne(self):
         self.nbIter = 1
