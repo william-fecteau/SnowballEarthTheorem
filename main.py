@@ -8,6 +8,7 @@ matplotlib.use('Qt5Agg')
 from PyQt5 import QtCore, QtGui, QtWidgets
 
 from earth import Earth
+from test import ImageBuilder
 
 
 class Ui_MainWindow(object):
@@ -193,6 +194,8 @@ class Ui_MainWindow(object):
 
         # Current iteration graph
         self.graphCurrent.update_figure(0, matAvgPerZone)
+
+        ImageBuilder(self.earth.getMatTemp(), 200, 273)
 
         # Overall graph
         self.graphOverall.update_figure(1, self.matOverall)
