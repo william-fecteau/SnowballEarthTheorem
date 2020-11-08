@@ -13,11 +13,11 @@ class Earth:
             raise Exception("Number of cells must be greater than 0")
 
         self.albedoCloud = albedoCloud # Albedo cloud constant
-        if(albedoCloud < 0 || albedoCloud > 1):
+        if(albedoCloud < 0 or albedoCloud > 1):
             raise Exception("Cloud albedo must be between 0 and 1")        
 
         self.greenHouse = greenHouse # Green house constant
-        if(greenHouse < 0 || greenHouse > 1):
+        if(greenHouse < 0 or greenHouse > 1):
             raise Exception("Green house must be between 0 and 1")   
 
         self.matSize = int(math.sqrt(nbCell))
