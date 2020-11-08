@@ -5,8 +5,8 @@ import numpy as np
 # ICE : 115, 255, 255
 # RED : 255, 0, 0
 
-class ImageBuilder:
-    def init(self, mat, mini, maxi):
+class BuildTempsImage:
+    def __init__(self, mat, mini, maxi):
         arrayWidth = mat.shape[0]
 
 
@@ -17,5 +17,4 @@ class ImageBuilder:
 
             im.putpixel((i,j), (int(r), 50, 200, 255))
 
-        im.show()
         im.save("temperatureImage.png")

@@ -8,7 +8,7 @@ matplotlib.use('Qt5Agg')
 from PyQt5 import QtCore, QtGui, QtWidgets
 
 from earth import Earth
-from tempImg import ImageBuilder
+from tempImg import BuildTempsImage
 
 
 class Ui_MainWindow(object):
@@ -119,6 +119,7 @@ class Ui_MainWindow(object):
         MainWindow.setStatusBar(self.statusbar)
         self.currGraphImage = QtWidgets.QLabel(self.centralwidget)
         self.currGraphImage.setScaledContents(True)
+        #self.currGraphImage.rotate(-90)
 
         # Initial values
         self.txtNbCell.setText(str(self.DEFAULT_CELL_NUMBERS))
@@ -209,10 +210,10 @@ class Ui_MainWindow(object):
         imgPosX = (int)(self.graphCurrent.x() + ((graphWidth / 3) * 2)) + 5
         self.currGraphImage.setGeometry(imgPosX, self.graphCurrent.y(), imgWidth, graphHeight)
         
-        #ImageBuilder(self.earth.getMatTemp(), 200, 273)
+        BuildTempsImage(self.earth.getMatTemp(), 200, 273)
 
-        #pixmap = QtGui.QPixmap('temperatureImage.png')
-        #self.currGraphImage.setPixmap(pixmap)
+        pixmap = QtGui.QPixmap('temperatureImage.png')
+        self.currGraphImage.setPixmap(pixmap)
 
     def handlerBtnPlusOne(self):
         self.nbIter = 1
