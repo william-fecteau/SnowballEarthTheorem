@@ -24,7 +24,7 @@ class Earth:
         if(matTempIni.size != nbCell):
             raise Exception("Initial temperature matrix does not fit with the number of cells")
         
-        # Adding some randomness to our data
+        # Adding some randomness to our temperature data
         matRandom = np.random.rand(self.matSize, self.matSize)
         self.matTemp = matRandom + matTempIni
 
