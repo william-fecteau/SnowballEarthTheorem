@@ -101,11 +101,13 @@ class Ui_MainWindow(object):
         self.grpCurrentIter.setGeometry(QtCore.QRect(220, 80, 331, 111))
         self.grpCurrentIter.setObjectName("grpCurrentIter")
         self.graphCurrent = DynamicMplCanvas(self.centralwidget)
-        self.graphCurrent.setGeometry(QtCore.QRect(10, 200, 541, 171))
+        self.graphCurrent.setGeometry(QtCore.QRect(10, 200, 500, 200))
         self.graphCurrent.setObjectName("graphCurrent")
         self.graphOverall = DynamicMplCanvas(self.centralwidget)
-        self.graphOverall.setGeometry(QtCore.QRect(10, 380, 541, 171))
+        self.graphOverall.setGeometry(QtCore.QRect(10, 420, 500, 200))
         self.graphOverall.setObjectName("graphOverall")
+        self.graphCurrent.axes.set_title('Current temperature in Kelvin depending on the zone')
+        self.graphOverall.axes.set_title('Overall temperature in Kelvin depending on the zone')
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(MainWindow)
         self.menubar.setGeometry(QtCore.QRect(0, 0, 560, 21))
@@ -172,8 +174,14 @@ class Ui_MainWindow(object):
         while self.nbIter > 0:
             self.earth.iterate()
             self.nbIter -= 1
-        self.graphCurrent.update_figure()
-        self.graphOverall.update_figure()
+            
+        self.graphCurrent.update_figure(0)
+        self.graphOverall.update_figure(1)
+
+        width = self.centralwidget.width() - 20
+        height = (self.centralwidget.height() - (self.graphCurrent.x() + 200)) / 2
+        self.graphCurrent.setGeometry(QtCore.QRect(10, 200, width, (int)(height)))
+        self.graphOverall.setGeometry(QtCore.QRect(10, 200 + self.graphCurrent.height() + 15, width, (int)(height)))
 
     def handlerBtnPlusOne(self):
         self.nbIter = 1
@@ -215,7 +223,7 @@ class DynamicMplCanvas(MplCanvas):
     def compute_initial_figure(self):
         self.axes.plot([0, 1, 2, 3], [1, 2, 0, 4], 'r')
 
-    def update_figure(self):
+    def update_figure(self, id):
 
         tempsMatrix = np.random.rand(11, 11) * 100 # TODO replace by received matrix
 
@@ -232,7 +240,25 @@ class DynamicMplCanvas(MplCanvas):
             avgTempsArray[y] = lineAvgTemp
 
         self.axes.cla()
-        self.axes.plot(np.arange(11), avgTempsArray, 'r')
+        self.axes.set_xlabel('Zone')
+        self.axes.set_ylabel('Temperature (k)')
+
+        if id == 0:
+             self.axes.set_title('Current temperature in Kelvin depending on the zone')
+        else:
+             self.axes.set_title('Overall temperature in Kelvin depending on the zone')
+       
+        self.axes.plot(np.arange(11), avgTempsArray, 'or-')
+        self.axes.xaxis.set_ticks(np.arange(0, arrayWidth, 1))
+        start, end = self.axes.get_ylim()
+
+        if self.height() < 200:
+            self.axes.yaxis.set_ticks(np.arange(start, end, 5))
+        elif self.height() < 400:
+            self.axes.yaxis.set_ticks(np.arange(start, end, 4))
+        else:
+            self.axes.yaxis.set_ticks(np.arange(start, end, 3))
+
         self.draw()
 
 
