@@ -6,6 +6,17 @@ class Earth:
     SOLAR = 1368
     RADIUS = 6_371_000 # meters
 
+    airheat=0.24
+    g=981
+    pression=101.325
+    radius=6371000
+    heateva=590
+    watervaporconstant=0.622
+    saturationvapor=61000
+    gasconstant=0.11
+    oceanheat=6000
+    oceanratio=0.666666
+
 
     def __init__(self, nbCell, albedoCloud, greenHouse, matTempIni):
         self.nbCell = nbCell # Number of cells in the simulation
@@ -45,7 +56,10 @@ class Earth:
             output = 4*(1-self.greenHouse)*self.SIGMA*(self.matTemp[i,j]**4)
             dt = (inpt - output) / (16*(1-self.greenHouse)*self.SIGMA*self.matTemp[i,j]**3)
 
-            dTemp[i,j] = dt
+            # At least we tried, I hate myself
+            #d2t=(inpt-output)/(-self.airheat*self.pression/self.g-self.oceanheat*self.oceanratio-(self.heateva**2)*self.watervaporconstant*self.saturationvapor/(self.g*self.gasconstant*(self.matTemp[i,j]**2)*math.exp(self.heateva*(1/273-1/self.matTemp[i,j])/self.gasconstant)))*math.tan(teta)
+
+            dTemp[i,j] = dt #+ d2t
 
         self.matTemp += dTemp
 
