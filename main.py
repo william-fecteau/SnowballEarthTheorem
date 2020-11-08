@@ -219,10 +219,23 @@ class DynamicMplCanvas(MplCanvas):
         self.axes.plot([0, 1, 2, 3], [1, 2, 0, 4], 'r')
 
     def update_figure(self):
-        # Build a list of 4 random integers between 0 and 10 (both inclusive)
-        l = [random.randint(0, 10) for i in range(4)]
+
+        tempsMatrix = np.random.rand(11, 11) * 100 # TODO replace by received matrix
+
+        arrayWidth = tempsMatrix.shape[0]
+        avgTempsArray = np.zeros(arrayWidth)
+
+        for y in range(arrayWidth):
+            lineAvgTemp = 0
+
+            for x in range(arrayWidth):
+                lineAvgTemp += tempsMatrix[x, y]
+
+            lineAvgTemp /= arrayWidth
+            avgTempsArray[y] = lineAvgTemp
+
         self.axes.cla()
-        self.axes.plot([0, 1, 2, 3], l, 'r')
+        self.axes.plot(np.arange(11), avgTempsArray, 'r')
         self.draw()
 
 
