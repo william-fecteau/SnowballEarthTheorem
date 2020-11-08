@@ -8,6 +8,7 @@ matplotlib.use('Qt5Agg')
 from PyQt5 import QtCore, QtGui, QtWidgets
 
 from earth import Earth
+from tempImg import ImageBuilder
 
 
 class Ui_MainWindow(object):
@@ -18,7 +19,7 @@ class Ui_MainWindow(object):
 
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(560, 597)
+        MainWindow.resize(730, 650)
         MainWindow.setFocusPolicy(QtCore.Qt.NoFocus)
         MainWindow.setLayoutDirection(QtCore.Qt.LeftToRight)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
@@ -116,7 +117,8 @@ class Ui_MainWindow(object):
         self.statusbar = QtWidgets.QStatusBar(MainWindow)
         self.statusbar.setObjectName("statusbar")
         MainWindow.setStatusBar(self.statusbar)
-
+        self.currGraphImage = QtWidgets.QLabel(self.centralwidget)
+        self.currGraphImage.setScaledContents(True)
 
         # Initial values
         self.txtNbCell.setText(str(self.DEFAULT_CELL_NUMBERS))
@@ -141,7 +143,7 @@ class Ui_MainWindow(object):
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
-        MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
+        MainWindow.setWindowTitle(_translate("MainWindow", "Snowball Earth Theorem"))
         self.grpInitialParameters.setTitle(_translate("MainWindow", "Initial parameters"))
         self.lblAlbedoCloud.setText(_translate("MainWindow", "Albedo Constant:"))
         self.lblNbCell.setText(_translate("MainWindow", "Number of cells:"))
@@ -198,9 +200,19 @@ class Ui_MainWindow(object):
         self.graphOverall.update_figure(1, self.matOverall)
 
         graphWidth = self.centralwidget.width() - 20
-        graphHeight = (self.centralwidget.height() - (self.graphCurrent.x() + 200)) / 2
-        self.graphCurrent.setGeometry(QtCore.QRect(10, 200, graphWidth, (int)(graphHeight)))
-        self.graphOverall.setGeometry(QtCore.QRect(10, 200 + self.graphCurrent.height() + 15, graphWidth, (int)(graphHeight)))
+        graphHeight = (int)((self.centralwidget.height() - (self.graphCurrent.x() + 200)) / 2)
+        
+        self.graphCurrent.setGeometry(QtCore.QRect(10, 200, (int)((graphWidth / 3) * 2) - 5, graphHeight))
+        self.graphOverall.setGeometry(QtCore.QRect(10, 200 + self.graphCurrent.height() + 15, graphWidth, graphHeight))
+
+        imgWidth = (int)(graphWidth / 3) - 5
+        imgPosX = (int)(self.graphCurrent.x() + ((graphWidth / 3) * 2)) + 5
+        self.currGraphImage.setGeometry(imgPosX, self.graphCurrent.y(), imgWidth, graphHeight)
+        
+        #ImageBuilder(self.earth.getMatTemp(), 200, 273)
+
+        #pixmap = QtGui.QPixmap('temperatureImage.png')
+        #self.currGraphImage.setPixmap(pixmap)
 
     def handlerBtnPlusOne(self):
         self.nbIter = 1
@@ -267,7 +279,7 @@ class DynamicMplCanvas(MplCanvas):
         else:
             self.axes.plot(np.arange(arrayWidth), mat, 'r-')
 
-        if arrayWidth < 11:
+        if arrayWidth <= 11:
             self.axes.xaxis.set_ticks(np.arange(0, arrayWidth, 1))
         elif arrayWidth < 31:
             self.axes.xaxis.set_ticks(np.arange(0, arrayWidth, 2))
