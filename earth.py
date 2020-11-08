@@ -7,37 +7,52 @@ class Earth:
     ALBEDO_INDEX = 2
 
     SIGMA = 5.670400*10**(-8)
-    STELLAR = 1368
+    SOLAR = 1368
     RADIUS = 6_371_000 # meters
 
 
-    def __init__(self, nbCell, albedoCloud, greenHouse, tempInit):
+    def __init__(self, nbCell, albedoCloud, greenHouse, matTempIni):
         self.nbCell = nbCell # Number of cells in the simulation
         self.albedoCloud = albedoCloud # Albedo cloud constant?
         self.greenHouse = greenHouse # Green house constant?
         self.matSize = int(math.sqrt(nbCell))
 
-        if(tempInit.size != nbCell):
+        if(matTempIni.size != nbCell):
             raise Exception("Initial temperature matrix does not fit with the number of cells")
-
-        self.tempInit = tempInit
         
         # Creation of the cell matrix (3xNxN)
         self.cells = np.zeros((3, self.matSize, self.matSize))
-        self.cells[self.TEMP_INDEX, :, :] = tempInit
+
+        matRandom = np.random.rand(self.matSize, self.matSize)
+        self.cells[self.TEMP_INDEX, :, :] = matRandom + matTempIni
+        print(self.cells[self.TEMP_INDEX, :, :])
 
 
     def iterate(self):
-        print("Itération")
+        self.calculateTempVariation()
+        print(self.cells[self.TEMP_INDEX, :, :])
 
-    def calculateEnergyVariation(self):
-        aire = 1
-        hInSec = 2 * 60 * 60
 
-        albedo = self.cells[self.TEMP_INDEX, :, :]
-        dEnergy = np.zeros((self.matSize, self.matSize))
+    def calculateTempVariation(self):
+        albedo = self.cells[self.ALBEDO_INDEX, :, :]
+        temp = self.cells[self.TEMP_INDEX, :, :]
+        dTemp = np.zeros((self.matSize, self.matSize))
 
-        print(self.STELLAR)
         for i,j in np.ndindex(albedo.shape):
-            dE = aire * self.STELLAR * hInSec * (1 - self.albedoCloud) * (1 - albedo[i,j]) * (1 + albedo[i,j] * (1 - self.greenHouse) + (albedo[i,j] * self.greenHouse)**2)
-            dEnergy[i,j] = dE
+            if temp[i,j] <= 263:
+                albedo[i,j] = 0.62
+            else:
+                albedo[i,j] = 0.3
+            
+            entree = self.SOLAR*(1 - albedo[i,j])
+            output = 4*(1-self.greenHouse)*self.SIGMA*(temp[i,j]**4)
+            dt = (entree - output) / (16*(1-self.greenHouse)*self.SIGMA*temp[i,j]**3)
+
+            dTemp[i,j] = dt
+
+        self.cells[self.TEMP_INDEX, :, :] = temp + dTemp
+
+
+
+
+

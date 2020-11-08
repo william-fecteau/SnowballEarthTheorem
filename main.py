@@ -14,7 +14,7 @@ class Ui_MainWindow(object):
     DEFAULT_CELL_NUMBERS = 100
     DEFAULT_ALBEDO_CLOUD = 0.2
     DEFAULT_GREEN_HOUSE = 0.2
-    DEFAULT_INITIAL_TEMP = 10
+    DEFAULT_INITIAL_TEMP = 273
 
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
