@@ -4,6 +4,8 @@
 
 This is a project made in 24h during the McGill's Physics Hackathon 2020. 
 
+This application is a simulation of a simple climate model. It computes the average temperature in relation to the latitude with some graphs for visualization.
+
 ## Dependencies
 
 We developed it using [python 3.8.0](https://www.python.org/downloads/release/python-380/).
@@ -28,6 +30,10 @@ git clone https://github.com/AggroBane/SnowballEarthTheorem.git
 ```bash
 python main.py
 ```
+
+## Explanations
+
+To make this climate model, we first had to scale the amount of sunlight received by each latitude. After, we had to consider that earth's albedo rises when covered in snow/ice, therefore, if the average temperature of a latitude drops down below -10 C, albedo raises. Finally, we took into account those two constants : the opposite factor and the greenhouse effect.
 
 ## References
 
