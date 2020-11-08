@@ -108,7 +108,7 @@ class Ui_MainWindow(object):
         self.graphOverall.setGeometry(QtCore.QRect(10, 420, 500, 200))
         self.graphOverall.setObjectName("graphOverall")
         self.graphCurrent.axes.set_title('Current temperature in Kelvin depending on the zone')
-        self.graphOverall.axes.set_title('Overall temperature in Kelvin depending on the zone')
+        self.graphOverall.axes.set_title('Overall temperature in Kelvin depending on the iteration')
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(MainWindow)
         self.menubar.setGeometry(QtCore.QRect(0, 0, 560, 21))
