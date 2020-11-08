@@ -210,9 +210,11 @@ class Ui_MainWindow(object):
         imgPosX = (int)(self.graphCurrent.x() + ((graphWidth / 3) * 2)) + 5
         self.currGraphImage.setGeometry(imgPosX, self.graphCurrent.y(), imgWidth, graphHeight)
         
-        BuildTempsImage(self.earth.getMatTemp(), 200, 273)
+        BuildTempsImage(self.earth.getMatTemp(), min(matAvgPerZone), max(matAvgPerZone))
 
         pixmap = QtGui.QPixmap('temperatureImage.png')
+        transform = QtGui.QTransform().rotate(90)
+        pixmap = pixmap.transformed(transform)
         self.currGraphImage.setPixmap(pixmap)
 
     def handlerBtnPlusOne(self):
