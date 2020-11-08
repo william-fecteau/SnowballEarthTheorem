@@ -39,17 +39,20 @@ class Earth:
         matRandom = np.random.rand(self.matSize, self.matSize)
         self.matTemp = matRandom + matTempIni
 
+        #for i,j in np.ndindex(self.matTemp.shape):
+        #    teta = (math.pi/2 / self.matSize) + math.pi * i / self.matSize
+        #    self.matTemp[i,j] *= abs(math.sin(teta)) 
+
+
 
     def iterate(self):
         self.calculateTempVariation()
-        print("=======================================Itération=======================================")
-        print(self.matTemp)
 
 
     def calculateTempVariation(self):
         dTemp = np.zeros((self.matSize, self.matSize))
         for i,j in np.ndindex(self.matTemp.shape):
-            albedo = 0.62 if self.matTemp[i,j] <= 263 else 0.3
+            albedo = self.albedoCloud + 0.3 if self.matTemp[i,j] <= 263 else self.albedoCloud
             
             teta = (math.pi/2 / self.matSize) + math.pi * i / self.matSize  
             inpt = self.SOLAR*abs(math.sin(teta))*(1 - albedo)
