@@ -48,3 +48,19 @@ class Earth:
             dTemp[i,j] = dt
 
         self.matTemp += dTemp
+
+    def getMatTemp(self):
+        return self.matTemp
+
+    def getAvgPerZone(self):
+        # May be more optimize with numpy but can't figure out how xd
+        avgTempsArray = np.zeros(self.matSize)
+        for i in range(self.matSize):
+            lineAvgTemp = 0
+            for j in range(self.matSize):
+                lineAvgTemp += self.matTemp[i,j]
+
+            lineAvgTemp /= self.matSize
+            avgTempsArray[i] = lineAvgTemp
+
+        return avgTempsArray

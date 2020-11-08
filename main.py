@@ -126,6 +126,8 @@ class Ui_MainWindow(object):
 
         self.grpIterCtrl.setEnabled(False)
         self.grpCurrentIter.setEnabled(False)
+        self.graphCurrent.hide()
+        self.graphOverall.hide()
 
         # Events
         self.btnStart.clicked.connect(self.startSimulation)
@@ -170,13 +172,30 @@ class Ui_MainWindow(object):
         # Creating the Earth object
         self.earth = Earth(nbCells, albedoCloud, greenHouse, tempInit)
 
+        self.matOverall = np.zeros(1)
+        matAvgPerZone = self.earth.getAvgPerZone()
+        self.matOverall[0] = self.computeOverallAvg(matAvgPerZone)
+
+        self.graphCurrent.show()
+        self.graphCurrent.update_figure(0, matAvgPerZone)
+        self.graphOverall.show()
+        self.graphOverall.update_figure(1, self.matOverall)
+
     def iterate(self):
+        matAvgPerZone = np.zeros(1)
+
         while self.nbIter > 0:
             self.earth.iterate()
             self.nbIter -= 1
-            
-        self.graphCurrent.update_figure(0)
-        self.graphOverall.update_figure(1)
+
+            matAvgPerZone = self.earth.getAvgPerZone()
+            self.matOverall = np.append(self.matOverall, self.computeOverallAvg(matAvgPerZone))
+
+        # Current iteration graph
+        self.graphCurrent.update_figure(0, matAvgPerZone)
+
+        # Overall graph
+        self.graphOverall.update_figure(1, self.matOverall)
 
         width = self.centralwidget.width() - 20
         height = (self.centralwidget.height() - (self.graphCurrent.x() + 200)) / 2
@@ -198,6 +217,14 @@ class Ui_MainWindow(object):
     def handlerBtnPlusHundred(self):
         self.nbIter = 100
         self.iterate()
+
+    def computeOverallAvg(self, mat):
+        arrayWidth = mat.shape[0]
+        lineAvgTemp = 0
+        for i in range(arrayWidth):
+            lineAvgTemp += mat[i]
+        
+        return lineAvgTemp / arrayWidth
 
 
 class MplCanvas(FigureCanvas):
@@ -221,23 +248,10 @@ class DynamicMplCanvas(MplCanvas):
         MplCanvas.__init__(self, *args, **kwargs)
 
     def compute_initial_figure(self):
-        self.axes.plot([0, 1, 2, 3], [1, 2, 0, 4], 'r')
+        self.axes.plot()
 
-    def update_figure(self, id):
-
-        tempsMatrix = np.random.rand(11, 11) * 100 # TODO replace by received matrix
-
-        arrayWidth = tempsMatrix.shape[0]
-        avgTempsArray = np.zeros(arrayWidth)
-
-        for y in range(arrayWidth):
-            lineAvgTemp = 0
-
-            for x in range(arrayWidth):
-                lineAvgTemp += tempsMatrix[x, y]
-
-            lineAvgTemp /= arrayWidth
-            avgTempsArray[y] = lineAvgTemp
+    def update_figure(self, id, mat):
+        arrayWidth = mat.shape[0]
 
         self.axes.cla()
         self.axes.set_xlabel('Zone')
@@ -248,16 +262,11 @@ class DynamicMplCanvas(MplCanvas):
         else:
              self.axes.set_title('Overall temperature in Kelvin depending on the zone')
        
-        self.axes.plot(np.arange(11), avgTempsArray, 'or-')
+        self.axes.plot(np.arange(arrayWidth), mat, 'or-')
         self.axes.xaxis.set_ticks(np.arange(0, arrayWidth, 1))
         start, end = self.axes.get_ylim()
 
-        if self.height() < 200:
-            self.axes.yaxis.set_ticks(np.arange(start, end, 5))
-        elif self.height() < 400:
-            self.axes.yaxis.set_ticks(np.arange(start, end, 4))
-        else:
-            self.axes.yaxis.set_ticks(np.arange(start, end, 3))
+        self.axes.yaxis.set_ticks(np.arange(start, end, 10))
 
         self.draw()
 
