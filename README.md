@@ -6,6 +6,8 @@ This is a project made in 24h during the McGill's Physics Hackathon 2020.
 
 This application is a simulation of a simple climate model. It computes the average temperature in relation to the latitude with some graphs for visualization.
 
+Video explanation : https://www.youtube.com/watch?v=RlJGr8nNG-A
+
 ## Dependencies
 
 We developed it using [python 3.8.0](https://www.python.org/downloads/release/python-380/).
